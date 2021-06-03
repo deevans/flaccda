@@ -1,0 +1,89 @@
+.\" Copyright 2009 David Egan Evans
+.\"
+.\"This software is provided 'as-is', without any express or implied
+.\"warranty. In no event will the authors be held liable for any damages
+.\"arising from the use of this software.
+.\"
+.\"Permission is granted to anyone to use this software for any purpose,
+.\"including commercial applications, and to alter it and redistribute it
+.\"freely, subject to the following restrictions:
+.\"
+.\"1. The origin of this software must not be misrepresented; you must
+.\"not claim that you wrote the original software. If you use this
+.\"software in a product, an acknowledgment in the product documentation
+.\"would be appreciated but is not required.
+.\"
+.\"2. Altered source versions must be plainly marked as such, and must 
+.\"not be misrepresented as being the original software.
+.\"
+.\" 3. This notice may not be removed or altered from any source distribution.
+.\"
+.TH flaccda "1" "February 2013" "flaccda 0.5" "User Commands"
+.SH NAME 
+flaccda \- Rip FLAC or MP3 files from CD-ROM with ID3v1.1 style metadata
+.SH SYNOPSIS
+flaccda [flac|mp3|tag]
+.LP
+mp3cda
+.LP
+stripmb
+.SH DESCRIPTION
+These utilities may fail if access to the CD-ROM drive is restricted.
+.SS flaccda
+.B flaccda
+reads from CD Audio Tracks (CDA), converts the PCM wave data to Free
+Lossless Audio Codec (FLAC) format, adding metadata from CDDB, and
+renaming the resulting files accordingly.
+.PP
+The following options are also available:
+.PP
+\fBflac\fR
+Convert existing AIFF files to FLAC. This is primarily for debugging,
+where tagging fails for some reason, after the CD-ROM is read and
+converted to AIFF.
+.PP
+\fBmp3\fR
+Convert existing FLAC files to MP3, without removing FLACs.
+This allows an existing FLAC archive to be converted to MP3s.
+.PP
+\fBtag\fR
+Add CDDB data to FLAC files in the current working directory (requires
+Internet connection and corresponding CD). This is primarily for debugging.
+.SS mp3cda
+.B mp3cda
+reads from CD Audio Tracks (CDA), converts the PCM wave data to to
+MPEG-1 Audio Layer 3 (MP3) format, adding ID3 style metadata from CDDB,
+and renaming the resulting files accordingly.
+.SS stripmb
+.B stripmb
+removes unwanted MusicBrainz metadata from FLAC files in the current
+working directory to make them consistent with those created by
+.B flaccda.
+.SH BUGS
+A CD with more that 99 tracks may have incorrect metadata and file names,
+or other unexpected behaviour.
+.P
+Foreign characters, and double quotes, in Title track names will cause
+unexpected directory and file names. Slashes are not allowed in file names.
+.P
+Current versions of cdparanoia and cdda2wav (and presumably icedax) have
+trouble with hidden tracks.
+.P
+FLAC to MP3 conversion does not always accurately preserve long metadata
+strings when used with multiple files.
+.P
+.B flaccda
+and
+.B mp3cda
+do not clean up after themselves, leaving AIFF residual.
+.P
+Report bugs, patches, etc. to D. E. Evans <sinuhe@gnu.org>
+
+.SH SEE ALSO
+
+.IR cdda2wav(1)
+.IR cdparanoia(1)
+.IR flac(1),
+.IR lame(1),
+.IR metaflac(1),
+

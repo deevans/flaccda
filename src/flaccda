@@ -1,0 +1,134 @@
+#!/bin/sh
+# flaccda. Build FLAC archive from CDA with preferred metadata within $CWD
+#
+# Copyright 2008 David Egan Evans
+#
+# This software is provided 'as-is', without any express or implied
+# warranty. In no event will the authors be held liable for any damages
+# arising from the use of this software.
+#
+# Permission is granted to anyone to use this software for any purpose,
+# including commercial applications, and to alter it and redistribute it
+# freely, subject to the following restrictions:
+#
+# 1. The origin of this software must not be misrepresented; you must
+# not claim that you wrote the original software. If you use this
+# software in a product, an acknowledgment in the product documentation
+# would be appreciated but is not required.
+#
+# 2. Altered source versions must be plainly marked as such, and must 
+# not be misrepresented as being the original software.
+#
+# 3. This notice may not be removed or altered from any source distribution.
+#
+# Dependencies: flac, cdparanoia, libcddb, lame
+# Version: 0.5
+
+aiff2flac() {
+	if ls | grep -q cdda.aiff$
+	then
+		for i in *.cdda.aiff
+		do flac $i
+		done
+	else echo "Cannot find AIFF files." 1>&2; exit 2
+	fi
+}
+
+cda2aiff() {
+	if test -x $(which cdparanoia); then
+		cdparanoia -fB
+	elif test -x $(which cdda2wav); then
+		cdda2wav -B -output-format aiff -paranoia
+	else echo "Can't find cdparanoia or cdda2wav" 1>&2; exit 3
+	fi 
+}
+
+flac2mp3() {
+	for i in *.flac
+	do
+		metaflac --export-tags-to=- "$i" |\
+			sed 's/=\(.*\)/="\1"/' >"$i".read
+		. "$i".read # This needs a sanity check for variable case.
+		flac -cd "$i" | lame \
+		--tt "$TITLE" --ta "$ARTIST" \
+		--tn "$TRACKNUMBER" --tg "$GENRE" \
+		--tl "$ALBUM" --ty "$DATE" \
+		- "${i%.flac}.mp3"
+	done
+	rm -f *.read
+}
+
+memusic() {
+	if ! test -d memusic
+	then mkdir memusic && cd memusic
+	else cd memusic
+	fi
+}
+
+# Only 99 tracks are available.
+# Any quote characters in a title will escape the variable.
+tag() {
+	if cddb_query -P http read > /tmp/metaenc1.$$ 2>/dev/null
+	then
+		GENRE="$(grep Genre /tmp/metaenc1.$$ | \
+			cut -d: -f 2 |  awk '{sub(/^ +/, ""); print}')"
+		ARTIST="$(grep Artist /tmp/metaenc1.$$ | cut -d : -f 2 | \
+			awk '{sub(/^ +/, ""); print}')"
+		ALBUM="$(grep Title /tmp/metaenc1.$$ | cut -d : -f 2 | \
+			 awk '{sub(/^ +/, ""); print}')"
+		YEAR="$(grep Year /tmp/metaenc1.$$ | cut -d : -f 2 | \
+			 awk '{sub(/^ +/, ""); print}')"
+		sed '/^Ext/d' /tmp/metaenc1.$$ >/tmp/metaenc.$$
+                rm /tmp/metaenc1.$$
+		NUM="$(grep tracks /tmp/metaenc.$$ | cut -d ' ' -f 1)"
+		for i in $(seq 1 $NUM)
+		do
+			zi=$(printf "%02d" $i)
+			TRACK=`grep " \[${zi}\]" /tmp/metaenc.$$ | \
+			       grep -o "'.*'" | sed 's/.$//;s/^.//'`
+			metaflac --set-tag="TITLE=$TRACK" \
+			         --set-tag="ARTIST=$ARTIST" \
+			         --set-tag="TRACKNUMBER=$zi" \
+			         --set-tag="ALBUM=$ALBUM" \
+			         --set-tag="DATE=$YEAR" track$zi.cdda.flac
+			mv track$zi.cdda.flac "$ARTIST - $TRACK.flac"
+		done
+		if test -d ../"$ALBUM"
+		then echo Done!
+		else
+			if test -d ../memusic
+			then mv $(pwd) ../"$ALBUM"
+			fi
+		fi
+	else echo 'No CDDB record found.' 1>&2; exit 4
+	fi
+}
+
+usage() {
+	echo "Usage: flaccda [flac|mp3|tag]" 1>&2
+	echo 1>&2
+	exit 5
+}
+
+# Main
+if test $# -gt 1
+then usage
+fi
+if test $# -eq 1; then
+	case "$1" in
+		flac) aiff2flac;;
+		mp3) flac2mp3;;
+		tag) tag;;
+		*) usage;;
+	esac
+else
+	memusic
+	if ls | grep -q .flac$
+	then echo 'FLACs exist in memusic/' 1>&2; exit 6
+	fi
+	if ! ls | grep -q .cdda.aiff$
+	then cda2aiff
+	fi
+	aiff2flac
+	tag
+fi

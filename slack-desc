@@ -1,0 +1,17 @@
+# HOW TO EDIT THIS FILE:
+# There must be exactly 11 flaccda: lines, no longer than 79 characters,
+# for the formatting to be correct.  It's also customary to leave one space
+# after the ':' on lines with text.
+
+       |-----handy-ruler------------------------------------------------------|
+flaccda: Rip FLAC or MP3 files from CD-ROM with CDDB metadata
+flaccda:
+flaccda: {flac,mp3}cda reads from CD Audio Tracks (CDA), and converts the PCM
+flaccda: wave data to Audio Interchange File Format (AIFF). The AIFF data is
+flaccda: converted to Free Lossless Audio Codec (FLAC) or MPEG-1 Audio Layer 3
+flaccda: (MP3) format, adding metadata from CDDB, and renaming the resulting
+flaccda: files accordingly. stripmb normalizes FLAC MusicBrainz metadata.
+flaccda:
+flaccda: http://oberon07.com/flaccda/
+flaccda:
+flaccda:

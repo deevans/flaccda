@@ -1,0 +1,82 @@
+#!/bin/sh
+# mp3cda: Build MP3 lossy archive from .cda with CDDB metadata.
+#
+# Copyright 2009 David Egan Evans Magna UT 84044 USA
+#
+# This software is provided 'as-is', without any express or implied
+# warranty. In no event will the authors be held liable for any damages
+# arising from the use of this software.
+#
+# Permission is granted to anyone to use this software for any purpose,
+# including commercial applications, and to alter it and redistribute it
+# freely, subject to the following restrictions:
+#
+# 1. The origin of this software must not be misrepresented; you must
+# not claim that you wrote the original software. If you use this
+# software in a product, an acknowledgment in the product documentation
+# would be appreciated but is not required.
+#
+# 2. Altered source versions must be plainly marked as such, and must 
+# not be misrepresented as being the original software.
+#
+# 3. This notice may not be removed or altered from any source distribution.
+#
+# Dependencies: libcddb, lame, cdparanoia or cdda2wav
+cda2aiff() {
+	if test -x $(which cdparanoia); then
+		cdparanoia -fB
+	elif test -x $(which cdda2wav); then
+		cdda2wav -B -output-format aiff -paranoia
+	else echo "Can't find cdparanoia or cdda2wav" 1>&2; exit 2
+	fi
+}
+
+memusic() {
+	if ! test -d memusic
+	then mkdir memusic && cd memusic
+	else cd memusic
+	fi
+}
+
+mp3() {
+	if cddb_query -P http read > /tmp/metaenc1.$$ 2> /dev/null
+	then
+		ARTIST="$(grep Artist /tmp/metaenc1.$$ | \
+			cut -d: -f 2 | awk '{sub(/^ +/, ""); print}')"
+		ALBUM="$(grep Title /tmp/metaenc1.$$ | \
+			cut -d: -f 2 | awk '{sub(/^ +/, ""); print}')"
+		YEAR="$(grep Year /tmp/metaenc1.$$ | \
+			cut -d: -f 2 | awk '{sub(/^ +/, ""); print}')"
+		sed '/^Ext/d' /tmp/metaenc1.$$ >/tmp/metaenc.$$
+		rm /tmp/metaenc1.$$
+		NUM="$(grep tracks /tmp/metaenc.$$ | cut -d ' ' -f 1)"
+		for i in $(seq 1 $NUM)
+		do
+			zi=$(printf "%02d" $i)
+			TRACK=`grep " \[$zi\]" /tmp/metaenc.$$ | \
+			       grep -o "'.*'" | sed 's/.$//;s/^.//'`
+			lame -hv --tt "$TRACK" --ta "$ARTIST" --tn "$zi/$NUM" \
+			     --tl "$ALBUM" --ty "$YEAR" \
+			     track$zi.cdda.aiff "$ARTIST - $TRACK.mp3"
+		done
+		if test -d ../"$ALBUM"
+		then echo 'Done!'
+		else
+			if test -d ../memusic
+                        then mv $(pwd) ../"$ALBUM"
+                        fi
+		fi
+	else echo 'No CDDB record found.' 1>&2; exit 3
+	fi
+}
+
+# Main
+if test $# -eq 0
+then
+	memusic
+	echo '=== Reading CD-ROM ===' 1>&2
+	cda2aiff
+	echo '=== Converting to MP3 ===' 1>&2
+	mp3
+else echo "Usage: mp3cda" 1>&2; exit 1
+fi

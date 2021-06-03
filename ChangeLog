@@ -1,0 +1,197 @@
+2013.02.23 <sinuhe@gnu.org>
+
+* Ensure errors and warnings are sent to STDERR.
+* Handle memusic directory cleanly.
+* Because of the need to refactor the code (and simplify it!), bump to 0.5.
+* Release 0.5.
+
+2012.11.15 <sinuhe@gnu.org>
+
+* Change of license. This avoids the misleading and/or clause, and provides
+  a liberal free software license similar to the BSD and ISC licenses, and
+  is approved by both the Free Software Foundation and the Open Source
+  Initiative.
+* Release 0.4.5.
+
+2012.07.19 <sinuhe@gnu.org>
+
+* Use upper case tags for consistency with other ripping tools.
+* Make sure error is sent to STDERR in mp3cda.
+
+2012.07.18 <sinuhe@gnu.org>
+
+* For now, use ID3v1.1 compliant tagging, i.e. do not record track number
+  in FLACs.
+* Change release version to 0.4.5.
+
+2012.07.04 <sinuhe@gnu.org>
+
+* Fix a bug in stripmb that caused it to fail to recognize existing FLACs.
+* Make sure error is sent to STDERR.
+* Fix bug in argument test.
+* Remove TODO file.
+* Release 0.4.4.
+
+2011.06.11 <sinuhe@gnu.org>
+
+* Be dynamic with leading space removal of tag variables.
+* Instead of using options, use arguments that reflect the desired result.
+  This includes the removal of -a: this is a FLAC conversion program,
+  not AIFF; cdda2wav and cdparanoia are simple enough that a script option
+  is not needed.  This also includes the removal of the rmaiff function.
+* Remove -m option from mp3cda and make mp3cda independent of flaccda.
+* Remove and/or ISC clause, reflecting original ISC license (such as
+  used by OpenBSD).
+* Thanks to Stuart Jansen for feed back.
+* Release 0.4.3.
+
+2011.06.10 <sinuhe@gnu.org>
+
+* Use PID as extension to metaenc files. This avoids multi-user collisions.
+
+2011.02.25 <sinuhe@gnu.org>
+
+* Remove Murray PO Box.
+* Fix copyright year in the SlackBuild script, plus minor edits.
+* Update manual with reference to icedax, the Debian fork of
+  Schilling's cdda2wav.
+
+2011.01.17 <sinuhe@gnu.org>
+
+* Update SlackBuild script to match /opt changes.
+
+2010.11.28 <sinuhe@gnu.org>
+
+* Release 0.4.2
+
+2010.11.12 <sinuhe@gnu.org>
+
+* Default to /opt for installs.
+
+2010.09.14 <sinuhe@gnu.org>
+
+* Remove non-POSIX GNUism (sigh).
+
+2010.09.02 <sinuhe@gnu.org>
+
+* Fix a tagging bug in mp3cda (i.e. put $YEAR in quotes).
+* Release 0.4.1
+
+2010.08.15 <sinuhe@gnu.org>
+
+* Remove EXTD from CDDB to improve data integrity.
+
+2010.08.14 <sinuhe@gnu.org>
+
+* Fix test for echo bugs in mp3cda.
+* Fix munged memusic directory bugs.
+* Release 0.3.9
+* Use variable, high quality sample rate, instead of 128 bit rate.
+
+2010.08.07 <sinuhe@gnu.org>
+
+* Note FLAC to MP3 meta data bug.
+* Other minor changes.
+
+2010.07.20 <sinuhe@gnu.org>
+
+* Test for dependencies, instead of expecting them.
+* Remove non-POSIX sed -r syntax.
+* Release 0.3.8
+
+2010.07.16 <sinuhe@gnu.org>
+
+* Note non-POSIX sed -r syntax (this needs fixing).
+* Release 0.3.6
+* Fix bug in lame option
+* Release 0.3.7
+
+2010.07.07 <sinuhe@gnu.org>
+
+* Use . instead of source, for Edition 7 and POSIX compatibility.
+
+2010.07.05 <sinuhe@gnu.org>
+
+* Work out some kinks in the mp3 function.
+* Release 0.3.5
+
+2010.06.12 <sinuhe@gnu.org>
+
+* Create SlackBuild script.
+
+2010.05.14 <sinuhe@gnu.org>
+
+* Create mp3 function to flaccda.
+
+2010.03.09 <sinuhe@gnu.org>
+
+* Change license file name to NOTICE
+
+2010.01.22 <sinuhe@gnu.org>
+
+* Change license to use ISC text approved by OSI
+* Minor readability changes
+* Improve error detection
+* Release 0.3.4
+
+2009.12.30 <sinuhe@gnu.org>
+
+* Rename mp3aiff to mp3cda.
+* Release 0.3.3
+
+2009.12.27 <sinuhe@gnu.org>
+
+* Fix bug in Fedora/RHEL build
+
+2009.12.26 <sinuhe@gnu.org>
+
+* Remove -x from mp3flac
+* Use tab indent style (with spaces for inline ordering)
+* Add version.sh
+* Release 0.3.2
+
+2009.12.23 <sinuhe@gnu.org>
+
+* Remove distver and use %makeinstall
+* Release 0.3.1
+
+2009.12.21 <sinuhe@gnu.org>
+
+* Release 0.3
+
+2009.12.18 <sinuhe@gnu.org>
+
+* Add -r option
+* Remove TODO file
+* Add mp3aiff
+
+2009.12.10 <sinuhe@gnu.org>
+
+* Fix dist detection bug in spec file
+* Release 0.1.2
+* Fix rmaiff bug
+* Fix missing CDDB entry bug
+* Release 0.2
+
+2009.12.04 <sinuhe@gnu.org>
+
+* Update README with notes about flac2mp3 and vorbis-tools,
+  and change TODO file to match.  Misc minor changes.
+* Release 0.1.1.
+
+2009.11.09 <sinuhe@gnu.org>
+
+* Modify spec file to be used with RHEL.
+
+2009.11.04 <sinuhe@gnu.org>
+
+* Note aiff removal bug.
+
+2009.10.26 <sinuhe@gnu.org>
+
+* Update spec file.
+
+2009.10.24 <sinuhe@gnu.org>
+
+* Initial release 0.1.
+* Thanks to Stephen Weeks for his feed back.

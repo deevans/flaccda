@@ -1,0 +1,50 @@
+#!/bin/sh
+# Copyright 2010 David Egan Evans
+#
+# This software is provided 'as-is', without any express or implied
+# warranty. In no event will the authors be held liable for any damages
+# arising from the use of this software.
+#
+# Permission is granted to anyone to use this software for any purpose,
+# including commercial applications, and to alter it and redistribute it
+# freely, subject to the following restrictions:
+#
+# 1. The origin of this software must not be misrepresented; you must
+# not claim that you wrote the original software. If you use this
+# software in a product, an acknowledgment in the product documentation
+# would be appreciated but is not required.
+#
+# 2. Altered source versions must be plainly marked as such, and must 
+# not be misrepresented as being the original software.
+#
+# 3. This notice may not be removed or altered from any source distribution.
+
+PKG=flaccda
+VERSION=0.5
+BUILD=1
+
+CWD=$(pwd)
+if test "$TMP" = ""
+then TMP=/tmp
+fi
+
+if test ! -d $TMP
+then mkdir -p $TMP
+fi
+
+cd $TMP
+tar xzvf $CWD/$PKG-$VERSION.tar.gz || exit 1
+
+cd $PKG-$VERSION || exit 1
+mandir=$PKG/usr/man make install DESTDIR=$TMP/sGOS-$PKG || exit 2
+gzip -9 $PKG/usr/man/flaccda.1
+
+mkdir -p $TMP/sGOS-$PKG/usr/doc/$PKG-$VERSION
+cp -R ChangeLog README $TMP/sGOS-$PKG/usr/doc/$PKG-$VERSION
+
+mkdir -p $TMP/sGOS-$PKG/install
+>$TMP/sGOS-$PKG/install/slack-desc <$CWD/slack-desc
+
+cd $TMP/sGOS-$PKG
+makepkg -l y -c n $TMP/$PKG-$VERSION-noarch-$BUILD.tgz
+
