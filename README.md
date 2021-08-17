@@ -9,12 +9,6 @@ using the `makefile`, set `bindir` and `mandir` for defining the
 prefix, (e.g. `bindir=/usr/local/ make install`). `DESTDIR` can
 also be used.
 
-Community
-=========
-
-Join us in channel #sgos, at chat.freenode.net, for free software
-discussions, including using and contributing to flaccda.
-
 Ogg Conversion
 ==============
 
